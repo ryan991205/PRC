@@ -11,24 +11,31 @@ class Value
         virtual ~Value();
         // empty virtual destructor
 
-        std::string getText() const;
+        std::string GetText() const;
         // post: current value is returned
 
-        void setText(std::string value);
+        void SetText(std::string value);
         // post: value is updated with new value
 
-        Value* getPrev();
+        Value* GetNext() { return nextValue; };
+        // post: ponter to next value is returned
+
+        void SetNext(Value* next) { nextValue = next; };
+        // post: pointer to next value is set
+
+        Value* GetPrev() { return prevValue; };
         // post: pointer to prev value is returned
 
-        void setPrev(Value* prev);
+        void SetPrev(Value* prev) { prevValue = prev; };
         // post: pointer to prev value is set
 
-        void print() const;
+        void Print() const;
         // post: current value is printed to stdout
 
     private:
         std::string word;
-        Value* prev;
+        Value* nextValue;
+        Value* prevValue;
 
         // private copy constructor and assignment operator to prevent making copies
         Value(const Value&) { /* do nothing */ };

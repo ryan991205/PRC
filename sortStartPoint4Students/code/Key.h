@@ -9,41 +9,52 @@ class Key
         Key();
         // post: Key is properly initialised, however the key value
         //       is illegal (empty)
-
-        virtual ~Key();
+        ~Key();
         // post: recursively deletes all keys and values
-        
-        std::string getText() const;
-        // post: current key value is returned
-        
-        bool setText(std::string key);
+
+
+        bool SetText(std::string key);
         // post: if key length equals 2 the key value is set and true is returned,
         //       else key is ignored and false is returned
 
-        void addValue(std::string word);
+        std::string GetText() const { return const key; };
+        // post: current key value is returned
+
+        Value* GetHead() { return head; };
+        // post: pointer to this key's first value is returned
+        
+        void SetHead(Value* head) { this->head = head; };
+        // post: pointer to this key's first value is set
+
+        void SetNext(key* next) { nextKey = next; };
+        // post: ponter to the next key is returned
+
+        key* GetNext() { return nextKey; };
+        // post: pointer to the next key is set
+        
+        void SetPrev(Key* prev) { prevKey = prev; };
+        // post: pointer to the prev key is set
+        
+        Key* GetPrev() { return prevKey; };
+        // post: pointer to the prev key is returned
+        
+
+        void AddValue(std::string word);
         // post: a new word is added to the correct key:
         //       - if the word fits in this key, a new value is added to the valuelist
         //       - if the word doesn't fit in this key, addValue is called on the next key
         //       - if no fitting key is found, a new key is made with this value in it
-        
-        Value* getValuePtr();
-        // post: pointer to this key's first value is returned
-        
-        void setValuePtr(Value* value);
-        // post: pointer to this key's first value is set
-        
-        void setPrev(Key* prev);
-        // post: pointer to the prev key is set
-        
-        Key* getPrev();
-        // post: pointer to the prev key is returned
 
-        void print() const;
+        void Sort();
+        // post: sorts all values that belong to this key
+
+        void Print() const;
         // post: all keys and values are recursively printed
         
     private:
         std::string key;
-        Value* valueTail;
+        Value* head;
+        key* nextKey;
         Key* prevKey;
         
         // private copy constructor and assignment operator to prevent making copies
