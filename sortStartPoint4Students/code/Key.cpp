@@ -1,5 +1,11 @@
 #include "Key.h"
 
+#include <iostream>
+#include <stdexcept>
+
+#define STRING_BEGIN 0
+#define THIRD_CHAR 2
+
 
 Key::Key()
 {
@@ -22,11 +28,10 @@ Key::~Key()
 
     if(nextKey != NULL)
     {
-        delete nextkey;
+        delete nextKey;
     }
 }
 // post: recursively deletes all keys and values
-
 
 bool Key::SetText(std::string key)
 {
@@ -41,15 +46,19 @@ bool Key::SetText(std::string key)
 // post: if key length equals 2 the key value is set and true is returned,
 //       else key is ignored and false is returned
 
-
 void Key::AddValue(std::string word)
 {
-    if(key == "")
+    if(word.empty())
     {
-        return; // exception
+        throw std::out_of_range("word == empty");
     }
 
-    if(word::starts_with(key))
+    if(word.length() < 2)
+    {
+        throw std::out_of_range("word.length < 2");
+    }
+
+    if(key.compare(word.substr(STRING_BEGIN, THIRD_CHAR)))
     {
         Value* next = head;
         head = new Value(word);
@@ -60,13 +69,9 @@ void Key::AddValue(std::string word)
 
     if(nextKey == NULL)
     {
-        nextKey = new Key()
+        nextKey = new Key();
         nextKey->SetPrev(this);
-        
-        if(!(nextKey->SetText(word))
-        {
-            return; // exception
-        }
+        nextKey->SetText(word.substr(STRING_BEGIN, THIRD_CHAR));
     }
 
     nextKey->AddValue(word);
@@ -91,6 +96,19 @@ void Key::Sort()
 
 void Key::Print() const
 {
+    std::cout << "Key: " << key;
 
+    if(head != NULL)
+    {
+        std::cout << ' ';
+        head->Print();
+    }
+
+    std::cout << '\n';
+
+    if(nextKey != NULL)
+    {
+        nextKey->Print();
+    }
 }
 // post: all keys and values are recursively printed

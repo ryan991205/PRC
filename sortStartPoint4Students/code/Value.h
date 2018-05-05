@@ -11,10 +11,10 @@ class Value
         virtual ~Value();
         // empty virtual destructor
 
-        std::string GetText() const;
+        std::string GetText() const { return const word; };
         // post: current value is returned
 
-        void SetText(std::string value);
+        void SetText(std::string value) { word = value; };
         // post: value is updated with new value
 
         Value* GetNext() { return nextValue; };

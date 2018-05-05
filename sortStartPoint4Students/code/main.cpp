@@ -6,6 +6,7 @@
 
 void SortKeys(Key* head)
 {
+    // todo: sort keys
 
 }
 // post: Sort all keys.
@@ -23,7 +24,7 @@ int main()
     
     // sort all data
     // todo: call your sort method(s) here!
-    Sort(head);
+    SortKeys(&head);
 
     // save sorted data into a new file called sorted.bin
     f.SaveFile(head, "sorted.bin");

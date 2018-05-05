@@ -12,7 +12,6 @@ class Key
         ~Key();
         // post: recursively deletes all keys and values
 
-
         bool SetText(std::string key);
         // post: if key length equals 2 the key value is set and true is returned,
         //       else key is ignored and false is returned
@@ -26,10 +25,10 @@ class Key
         void SetHead(Value* head) { this->head = head; };
         // post: pointer to this key's first value is set
 
-        void SetNext(key* next) { nextKey = next; };
+        void SetNext(Key* next) { nextKey = next; };
         // post: ponter to the next key is returned
 
-        key* GetNext() { return nextKey; };
+        Key* GetNext() { return nextKey; };
         // post: pointer to the next key is set
         
         void SetPrev(Key* prev) { prevKey = prev; };
@@ -37,7 +36,6 @@ class Key
         
         Key* GetPrev() { return prevKey; };
         // post: pointer to the prev key is returned
-        
 
         void AddValue(std::string word);
         // post: a new word is added to the correct key:
@@ -54,7 +52,7 @@ class Key
     private:
         std::string key;
         Value* head;
-        key* nextKey;
+        Key* nextKey;
         Key* prevKey;
         
         // private copy constructor and assignment operator to prevent making copies
