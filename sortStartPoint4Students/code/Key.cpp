@@ -81,7 +81,7 @@ void Key::AddValue(std::string word)
 //       - if the word doesn't fit in this key, addValue is called on the next key
 //       - if no fitting key is found, a new key is made with this value in it
 
-void Key::Sort() const
+void Key::Sort()
 {
     /*// probably not necessary but clean
     if(currentValue == NULL)
@@ -109,7 +109,7 @@ void Key::Sort() const
 }
 // post: sorts all values that belong to this key
 
-void Key::Print()
+void Key::Print() const
 {
     std::cout << "Key: " << key;
 
@@ -128,7 +128,7 @@ void Key::Print()
 }
 // post: all keys and values are recursively printed
 
-Value* Key::GetFirstLowerOrEqualValue(Value* value)
+Value* Key::GetFirstHigherOrEqualValue(Value* value)
 {
     /*// probably not necessary but clean
     if(value == NULL)

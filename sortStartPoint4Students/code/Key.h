@@ -43,10 +43,10 @@ class Key
         //       - if the word doesn't fit in this key, addValue is called on the next key
         //       - if no fitting key is found, a new key is made with this value in it
 
-        void Sort() const;
+        void Sort();
         // post: sorts all values that belong to this key
 
-        void Print();
+        void Print() const;
         // post: all keys and values are recursively printed
         
     private:
@@ -55,7 +55,7 @@ class Key
         Key* nextKey;
         Key* prevKey;
 
-        Value* GetFirstLowerOrEqualValue(Value* value);
+        Value* GetFirstHigherOrEqualValue(Value* value);
         // post: 
 
         void DisconnectValue(Value* value);
