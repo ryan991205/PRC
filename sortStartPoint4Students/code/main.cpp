@@ -1,5 +1,5 @@
 #include <iostream>
-#include <stdexcept>
+//#include <stdexcept>
 
 #include "FileStructure.h"
 #include "Key.h"
@@ -82,7 +82,7 @@ void InsertBefore(Key* key, Key* newNextKey)
 }
 // post: Inserts key in front of other key.
 
-Key* SortKeys(Key* head)
+void SortKeys(Key* head)
 {
     /*// probably not necessary but clean
     if(currentKey == NULL)
@@ -107,15 +107,9 @@ Key* SortKeys(Key* head)
             DisconnectKey(currentKey);
             InsertBefore(currentKey, firstHigherOrEqualKey);
         }
-        else
-        {
-            head = currentKey;
-        }
 
         currentKey = next;
     }
-
-    return head;
 }
 // post: Sort all keys. Returns new head.
 
@@ -136,7 +130,7 @@ int main()
     
     // sort all data
     // todo: call your sort method(s) here!
-    head = SortKeys(&head);
+    SortKeys(&head);
 
     // next lines are only to show what kind of data we're working with
     // remove these lines to increase performance!

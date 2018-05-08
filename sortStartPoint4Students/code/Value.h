@@ -11,7 +11,7 @@ class Value
         virtual ~Value();
         // empty virtual destructor
 
-        const std::string GetText() const { return word; };
+        const std::string GetText() { return word; };
         // post: current value is returned
 
         void SetText(std::string value) { word = value; };

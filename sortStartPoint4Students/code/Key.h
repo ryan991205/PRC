@@ -16,7 +16,7 @@ class Key
         // post: if key length equals 2 the key value is set and true is returned,
         //       else key is ignored and false is returned
 
-        const std::string GetText() const { return key; };
+        const std::string GetText() { return key; };
         // post: current key value is returned
 
         Value* GetHead() { return head; };
@@ -43,10 +43,10 @@ class Key
         //       - if the word doesn't fit in this key, addValue is called on the next key
         //       - if no fitting key is found, a new key is made with this value in it
 
-        void Sort();
+        void Sort() const;
         // post: sorts all values that belong to this key
 
-        void Print() const;
+        void Print();
         // post: all keys and values are recursively printed
         
     private:
