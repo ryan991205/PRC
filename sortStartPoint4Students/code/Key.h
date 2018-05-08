@@ -16,7 +16,7 @@ class Key
         // post: if key length equals 2 the key value is set and true is returned,
         //       else key is ignored and false is returned
 
-        std::string GetText() const { return const key; };
+        const std::string GetText() const { return key; };
         // post: current key value is returned
 
         Value* GetHead() { return head; };
@@ -54,6 +54,15 @@ class Key
         Value* head;
         Key* nextKey;
         Key* prevKey;
+
+        Value* GetFirstLowerOrEqualValue(Value* value);
+        // post: 
+
+        void DisconnectValue(Value* value);
+        // post: 
+
+        void InsertAfter(Value* value, Value* newPrevValue);
+        // post: 
         
         // private copy constructor and assignment operator to prevent making copies
         Key(const Key&) { /* do nothing */ };

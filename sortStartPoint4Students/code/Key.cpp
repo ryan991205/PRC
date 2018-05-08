@@ -42,7 +42,7 @@ bool Key::SetText(std::string key)
     }
 
     return false;
-};
+}
 // post: if key length equals 2 the key value is set and true is returned,
 //       else key is ignored and false is returned
 
@@ -83,13 +83,28 @@ void Key::AddValue(std::string word)
 
 void Key::Sort()
 {
-    // todo: sort all values in key this key
-
-    // end of todo
-
-    if(nextKey != NULL)
+    /*// probably not necessary but clean
+    if(currentValue == NULL)
     {
-        nextKey->Sort();
+        throw std::logic_error("currentValue == null");
+    }
+    //*/
+
+    Value* currentValue = head;
+    Value* next = NULL;
+    Value* firstLowerOrEqualValue = NULL;
+
+    while(currentValue != NULL)
+    {
+        firstLowerOrEqualValue = GetFirstLowerOrEqualValue(currentValue);
+
+        if(firstLowerOrEqualValue != NULL)
+        {
+            DisconnectValue(currentValue);
+            InsertAfter(currentValue, firstLowerOrEqualValue);
+        }
+
+        currentValue = next;
     }
 }
 // post: sorts all values that belong to this key
@@ -100,11 +115,11 @@ void Key::Print() const
 
     if(head != NULL)
     {
-        std::cout << ' ';
+        std::cout << " -> ";
         head->Print();
     }
 
-    std::cout << '\n';
+    std::cout << std::endl;
 
     if(nextKey != NULL)
     {
@@ -112,3 +127,79 @@ void Key::Print() const
     }
 }
 // post: all keys and values are recursively printed
+
+Value* Key::GetFirstLowerOrEqualValue(Value* value)
+{
+    /*// probably not necessary but clean
+    if(value == NULL)
+    {
+        throw std::logic_error("value == NULL");
+    }
+    //*/
+
+    Value* prevValue = value->GetPrev();
+
+    while((prevValue != NULL) && (prevValue->GetText() < value->GetText()))
+    {
+        prevValue = prevValue->GetPrev();
+    }
+
+    return prevValue;
+}
+// post: 
+
+void Key::DisconnectValue(Value* value)
+{
+    /*// probably not necessary but clean
+    if(value == NULL)
+    {
+        throw std::logic_error("value == NULL");
+    }
+    //*/
+
+    Value* prevValue = value->GetPrev();
+    Value* nextValue = value->GetNext();
+
+    if(prevValue != NULL)
+    {
+        prevValue->SetNext(nextValue);
+    }
+
+    if(nextValue != NULL)
+    {
+        nextValue->SetPrev(prevValue);
+    }
+
+    /*// probably not necessary but clean
+    value->SetPrev(NULL);
+    value->SetNext(NULL);
+    //*/
+}
+// post: 
+
+void Key::InsertAfter(Value* value, Value* newPrevValue)
+{
+    /*// probably not necessary but clean
+    if(value == NULL)
+    {
+        throw std::logic_error("value == NULL");
+    }
+
+    if(newPrevValue == NULL)
+    {
+        throw std::logic_error("newPrevValue == NULL");
+    }
+    //*/
+
+    Value* newNextValue = newPrevValue->GetNext();
+
+    value->SetPrev(newPrevValue);
+    value->SetNext(newNextValue);
+
+    newPrevValue->SetNext(value);
+    if(newNextValue != NULL)
+    {
+        newNextValue->SetPrev(value);
+    }
+    // post: 
+}

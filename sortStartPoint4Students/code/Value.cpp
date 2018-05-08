@@ -28,7 +28,7 @@ void Value::Print() const
 
     if(nextValue != NULL)
     {
-        std::cout << " ,";
+        std::cout << ", ";
         nextValue->Print();
     }
 }
