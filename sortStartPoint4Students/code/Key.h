@@ -1,6 +1,8 @@
 #ifndef KEY_H
 #define KEY_H
 
+#include <iostream>
+
 #include "Value.h"
 
 class Key
@@ -12,29 +14,29 @@ class Key
         ~Key();
         // post: recursively deletes all keys and values
 
-        bool SetText(std::string key);
+        bool setText(std::string key);
         // post: if key length equals 2 the key value is set and true is returned,
         //       else key is ignored and false is returned
 
-        const std::string GetText() { return key; };
+        const std::string getText() { return key; };
         // post: current key value is returned
 
-        Value* GetHead() { return head; };
+        Value* getHead() { return head; };
         // post: pointer to this key's first value is returned
         
-        void SetHead(Value* head) { this->head = head; };
+        void setHead(Value* head) { this->head = head; };
         // post: pointer to this key's first value is set
 
-        void SetNext(Key* next) { nextKey = next; };
+        void setNext(Key* next) { nextKey = next; };
         // post: ponter to the next key is returned
 
-        Key* GetNext() { return nextKey; };
+        Key* getNext() { return nextKey; };
         // post: pointer to the next key is set
         
-        void SetPrev(Key* prev) { prevKey = prev; };
+        void setPrev(Key* prev) { prevKey = prev; };
         // post: pointer to the prev key is set
         
-        Key* GetPrev() { return prevKey; };
+        Key* getPrev() { return prevKey; };
         // post: pointer to the prev key is returned
 
         void AddValue(std::string word);

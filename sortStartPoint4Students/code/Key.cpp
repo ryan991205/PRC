@@ -9,7 +9,7 @@
 
 Key::Key()
 {
-    std::cout << "creating new Key" << std::endl; // debug
+    //std::cout << "creating new Key" << std::endl; // debug
 
     key = "";
     head = NULL;
@@ -21,11 +21,11 @@ Key::Key()
 
 Key::~Key()
 {
-    std::cout << "deleting key" << std::endl; // debug
+    //std::cout << "deleting key" << std::endl; // debug
     
     while(head != NULL)
     {
-        Value* next = head->GetNext();
+        Value* next = head->getNext();
         delete head;
         head = next;
     }
@@ -37,9 +37,9 @@ Key::~Key()
 }
 // post: recursively deletes all keys and values
 
-bool Key::SetText(std::string key)
+bool Key::setText(std::string key)
 {
-    std::cout << "Adding keyword: " << key << " to new key" << std::endl; // debug
+    //std::cout << "Adding keyword: " << key << " to new key" << std::endl; // debug
 
     if(key.length() == 2)
     {
@@ -66,14 +66,26 @@ void Key::AddValue(std::string word)
     }
     //*/
 
-    std::cout << "Key: " << key << " AddValue() with word: " << word <<std::endl; // debug
+    //std::cout << "Key: " << key << " AddValue() with word: " << word <<std::endl; // debug
 
-    if(key.compare(word.substr(STRING_BEGIN, THIRD_CHAR)))
+    //if(key.empty())
+    //{
+    //    key = word.substr(STRING_BEGIN, THIRD_CHAR);
+    //}
+
+    if(key.compare(word.substr(STRING_BEGIN, THIRD_CHAR)) == 0)
     {
+        //std::cout << "word matches" << std::endl; // debug
+
         Value* next = head;
+
         head = new Value(word);
-        head->SetNext(next);
-        next->SetPrev(head);
+        head->setNext(next);
+
+        if(next != NULL)
+        {
+            next->setPrev(head);
+        }
 
         std::cout << "word matches" << std::endl; // debug
         return;
@@ -82,12 +94,13 @@ void Key::AddValue(std::string word)
     if(nextKey == NULL)
     {
         nextKey = new Key();
-        nextKey->SetPrev(this);
-        nextKey->SetText(word.substr(STRING_BEGIN, THIRD_CHAR));
+        nextKey->setPrev(this);
+        nextKey->setText(word.substr(STRING_BEGIN, THIRD_CHAR));
 
-        std::cout << "creating new key" << std::endl; // debug
+        //std::cout << "creating new key" << std::endl; // debug
     }
 
+    //std::cout << "loop" << std::endl;
     nextKey->AddValue(word);
 }
 // post: a new word is added to the correct key:
@@ -125,7 +138,16 @@ void Key::Sort()
 
 void Key::Print() const
 {
-    std::cout << "Key: " << key;
+    std::cout << "Key: ";
+
+    if(key == "")
+    {
+        std::cout << "!empty string!";
+    }
+    else
+    {
+        std::cout << key;
+    }
 
     if(head != NULL)
     {
@@ -151,11 +173,11 @@ Value* Key::GetFirstHigherOrEqualValue(Value* value)
     }
     //*/
 
-    Value* prevValue = value->GetPrev();
+    Value* prevValue = value->getPrev();
 
-    while((prevValue != NULL) && (prevValue->GetText() > value->GetText()))
+    while((prevValue != NULL) && (prevValue->getText() > value->getText()))
     {
-        prevValue = prevValue->GetPrev();
+        prevValue = prevValue->getPrev();
     }
 
     return prevValue;
@@ -171,22 +193,22 @@ void Key::DisconnectValue(Value* value)
     }
     //*/
 
-    Value* prevValue = value->GetPrev();
-    Value* nextValue = value->GetNext();
+    Value* prevValue = value->getPrev();
+    Value* nextValue = value->getNext();
 
     if(prevValue != NULL)
     {
-        prevValue->SetNext(nextValue);
+        prevValue->setNext(nextValue);
     }
 
     if(nextValue != NULL)
     {
-        nextValue->SetPrev(prevValue);
+        nextValue->setPrev(prevValue);
     }
 
     /*// probably not necessary but clean
-    value->SetPrev(NULL);
-    value->SetNext(NULL);
+    value->setPrev(NULL);
+    value->setNext(NULL);
     //*/
 }
 // post: 
@@ -205,15 +227,15 @@ void Key::InsertAfter(Value* value, Value* newPrevValue)
     }
     //*/
 
-    Value* newNextValue = newPrevValue->GetNext();
+    Value* newNextValue = newPrevValue->getNext();
 
-    value->SetPrev(newPrevValue);
-    value->SetNext(newNextValue);
+    value->setPrev(newPrevValue);
+    value->setNext(newNextValue);
 
-    newPrevValue->SetPrev(value);
+    newPrevValue->setPrev(value);
     if(newPrevValue != NULL)
     {
-        newPrevValue->SetNext(value);
+        newPrevValue->setNext(value);
     }
 }
 // post:

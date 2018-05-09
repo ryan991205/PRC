@@ -1,6 +1,7 @@
 #ifndef VALUE_H
 #define VALUE_H
 
+#include <iostream>
 #include <string>
 
 class Value
@@ -11,22 +12,22 @@ class Value
         virtual ~Value();
         // empty virtual destructor
 
-        const std::string GetText() { return word; };
+        const std::string getText() { return word; };
         // post: current value is returned
 
-        void SetText(std::string value) { word = value; };
+        void setText(std::string value) { word = value; };
         // post: value is updated with new value
 
-        Value* GetNext() { return nextValue; };
+        Value* getNext() { return nextValue; };
         // post: ponter to next value is returned
 
-        void SetNext(Value* next) { nextValue = next; };
+        void setNext(Value* next) { nextValue = next; };
         // post: pointer to next value is set
 
-        Value* GetPrev() { return prevValue; };
+        Value* getPrev() { return prevValue; };
         // post: pointer to prev value is returned
 
-        void SetPrev(Value* prev) { prevValue = prev; };
+        void setPrev(Value* prev) { prevValue = prev; };
         // post: pointer to prev value is set
 
         void Print() const;

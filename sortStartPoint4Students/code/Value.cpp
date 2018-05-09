@@ -6,7 +6,7 @@
 
 Value::Value(std::string word)
 {
-    std::cout << "creating new Value with word: " << word << std::endl; // debug
+    //std::cout << "creating new Value with word: " << word << std::endl; // debug
     
     if(word.empty())
     {

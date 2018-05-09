@@ -8,17 +8,17 @@
 Key* GetFirstHigherOrEqualKey(Key* key)
 {
     /*// probably not necessary but clean
-    if(key == NULL)
+    if(key == NULLg
     {
         throw std::logic_error("key == NULL");
     }
     //*/
 
-    Key* prevKey = key->GetPrev();
+    Key* prevKey = key->getPrev();
 
-    while((prevKey != NULL) && (prevKey->GetText() > key->GetText())) // !!!
+    while((prevKey != NULL) && (prevKey->getText().compare(key->getText()) <0)) // !!!
     {
-        prevKey = prevKey->GetPrev();
+        prevKey = prevKey->getPrev();
     }
 
     return prevKey;
@@ -35,17 +35,17 @@ void DisconnectKey(Key* key)
     }
     //*/
 
-    Key* prevKey = key->GetPrev();
-    Key* nextKey = key->GetNext();
+    Key* prevKey = key->getPrev();
+    Key* nextKey = key->getNext();
 
     if(prevKey != NULL)
     {
-        prevKey->SetNext(nextKey);
+        prevKey->setNext(nextKey);
     }
 
     if(nextKey != NULL)
     {
-        nextKey->SetPrev(prevKey);
+        nextKey->setPrev(prevKey);
     }
 
     /*// probably not necessary but clean
@@ -69,15 +69,15 @@ void InsertBefore(Key* key, Key* newNextKey)
     }
     //*/
 
-    Key* newPrevKey = newNextKey->GetPrev();
+    Key* newPrevKey = newNextKey->getPrev();
 
-    key->SetPrev(newPrevKey);
-    key->SetNext(newNextKey);
+    key->setPrev(newPrevKey);
+    key->setNext(newNextKey);
 
-    newNextKey->SetPrev(key);
+    newNextKey->setPrev(key);
     if(newPrevKey != NULL)
     {
-        newPrevKey->SetNext(key);
+        newPrevKey->setNext(key);
     }
 }
 // post: Inserts key in front of other key.
@@ -91,14 +91,14 @@ void SortKeys(Key* head)
     }
     //*/
 
-    Key* currentKey = head->GetNext();
+    Key* currentKey = head->getNext();
     Key* next = NULL;
     Key* firstHigherOrEqualKey = NULL;
 
     while(currentKey != NULL)
     {
         currentKey->Sort(); // seperate thread
-        next = currentKey->GetNext();
+        next = currentKey->getNext();
 
         firstHigherOrEqualKey = GetFirstHigherOrEqualKey(currentKey);
 
@@ -122,7 +122,31 @@ int main()
 
     std::cout << "loading from data/gibberish.bin" << std::endl; // debug
     
-    f.loadFile("data/gibberish.bin", head);
+    //f.loadFile("data/gibberish.bin", head);
+
+    //test data:
+    head.AddValue("value");
+    head.AddValue("hello");
+    head.AddValue("tafel");
+    head.AddValue("dikkeneger");
+    head.AddValue("dallo");
+    head.AddValue("hello");
+    head.AddValue("hello");
+    head.AddValue("tafel");
+    head.AddValue("dikkenegex");
+    head.AddValue("fuvcb");
+    head.AddValue("dhfdbe");
+    head.AddValue("hello");
+    head.AddValue("fel");
+    head.AddValue("feop");
+    head.AddValue("fer");
+     head.AddValue("zaag");
+    head.AddValue("zeno");
+    head.AddValue("xtye");
+    head.AddValue("ytr");
+    head.AddValue("ope");
+    head.AddValue("mon");
+    head.AddValue("nom");
 
     // next lines are only to show what kind of data we're working with
     // remove these lines to increase performance!
