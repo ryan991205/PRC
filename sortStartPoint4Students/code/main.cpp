@@ -115,33 +115,41 @@ void SortKeys(Key* head)
 
 int main()
 {
+    std::cout << "Program start" << std::endl; // debug
+
     FileStructure f;
     Key head;
+
+    std::cout << "loading from data/gibberish.bin" << std::endl; // debug
     
-    f.LoadFile("data/gibberish.bin", head);
+    f.loadFile("data/gibberish.bin", head);
 
     // next lines are only to show what kind of data we're working with
     // remove these lines to increase performance!
     //*//
-    std::cout << "\nBefore sort:\n";
+    std::cout << "\nBefore sort:\n"; // debug
     head.Print();
-    std::cout << '\n' << std::endl;
+    std::cout << '\n' << std::endl; // debug
     //*/
     
     // sort all data
     // todo: call your sort method(s) here!
+    std::cout << "Sorting keys and values" << std::endl; // debug
     SortKeys(&head);
 
     // next lines are only to show what kind of data we're working with
     // remove these lines to increase performance!
     //*//
-    std::cout << "\nBefore sort:\n";
+    std::cout << "\nAfter sort:\n"; // debug
     head.Print();
-    std::cout << '\n' << std::endl;
+    std::cout << '\n' << std::endl; // debug
     //*/
 
     // save sorted data into a new file called sorted.bin
-    f.SaveFile(head, "sorted.bin");
+    std::cout << "Saving to sorted.bin" << std::endl; // debug
+    f.saveFile(head, "sorted.bin");
+
+    std::cout << "Program done" << std::endl; // debug
     
     return 0;
 }

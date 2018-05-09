@@ -15,7 +15,7 @@ then
     destination="/usr/lib/x86_64-linux-gnu"
 else
     nrBits="32"
-    libs="$1${nrBits}bit/*"
+    libs="$1${nrBits}bit_${version}/*"
     destination="/usr/lib"
 fi
 

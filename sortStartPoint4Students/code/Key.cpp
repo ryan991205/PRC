@@ -9,6 +9,8 @@
 
 Key::Key()
 {
+    std::cout << "creating new Key" << std::endl; // debug
+
     key = "";
     head = NULL;
     nextKey = NULL;
@@ -19,6 +21,8 @@ Key::Key()
 
 Key::~Key()
 {
+    std::cout << "deleting key" << std::endl; // debug
+    
     while(head != NULL)
     {
         Value* next = head->GetNext();
@@ -35,6 +39,8 @@ Key::~Key()
 
 bool Key::SetText(std::string key)
 {
+    std::cout << "Adding keyword: " << key << " to new key" << std::endl; // debug
+
     if(key.length() == 2)
     {
         this->key = key;
@@ -48,6 +54,7 @@ bool Key::SetText(std::string key)
 
 void Key::AddValue(std::string word)
 {
+    /*//
     if(word.empty())
     {
         throw std::out_of_range("word == empty");
@@ -57,6 +64,9 @@ void Key::AddValue(std::string word)
     {
         throw std::out_of_range("word.length < 2");
     }
+    //*/
+
+    std::cout << "Key: " << key << " AddValue() with word: " << word <<std::endl; // debug
 
     if(key.compare(word.substr(STRING_BEGIN, THIRD_CHAR)))
     {
@@ -64,6 +74,8 @@ void Key::AddValue(std::string word)
         head = new Value(word);
         head->SetNext(next);
         next->SetPrev(head);
+
+        std::cout << "word matches" << std::endl; // debug
         return;
     }
 
@@ -72,6 +84,8 @@ void Key::AddValue(std::string word)
         nextKey = new Key();
         nextKey->SetPrev(this);
         nextKey->SetText(word.substr(STRING_BEGIN, THIRD_CHAR));
+
+        std::cout << "creating new key" << std::endl; // debug
     }
 
     nextKey->AddValue(word);
@@ -96,7 +110,7 @@ void Key::Sort()
 
     while(currentValue != NULL)
     {
-        firstLowerOrEqualValue = GetFirstLowerOrEqualValue(currentValue);
+        firstLowerOrEqualValue = GetFirstHigherOrEqualValue(currentValue);
 
         if(firstLowerOrEqualValue != NULL)
         {

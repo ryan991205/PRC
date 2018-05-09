@@ -6,6 +6,8 @@
 
 Value::Value(std::string word)
 {
+    std::cout << "creating new Value with word: " << word << std::endl; // debug
+    
     if(word.empty())
     {
         throw std::out_of_range("word == empty");
