@@ -19,19 +19,18 @@ Value::Value(std::string word)
     }
 
     this->word = word;
-    nextValue = NULL;
-    prevValue = NULL;
+    prev = NULL;
 }
 // post: Value is properly initialised with word as value
 
-void Value::Print() const
+void Value::print() const
 {
     std::cout << word;
 
-    if(nextValue != NULL)
+    if(prev != NULL)
     {
         std::cout << ", ";
-        nextValue->Print();
+        prev->print();
     }
 }
 // post: current value is printed to stdout

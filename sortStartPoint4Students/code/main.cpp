@@ -5,175 +5,151 @@
 #include "Key.h"
 
 
-Key* GetFirstHigherOrEqualKey(Key* key)
+int getListLength(Key* key)
 {
-    /*// probably not necessary but clean
-    if(key == NULLg
-    {
-        throw std::logic_error("key == NULL");
-    }
-    //*/
+    int counter = 0;
 
-    Key* prevKey = key->getPrev();
-
-    while((prevKey != NULL) && (prevKey->getText().compare(key->getText()) <0)) // !!!
+    while(key != NULL)
     {
-        prevKey = prevKey->getPrev();
+        counter++;
+        key = key->getPrev();
     }
 
-    return prevKey;
+    return counter;
 }
-// post: Function loops back through list to return the first key in the list that is higher or eqaul to the given key.
-//       Returns NULL if the given key is has the smallets value in the list.
 
-void DisconnectKey(Key* key)
+Key* merge(Key* a, Key* b)
 {
-    /*// probably not necessary but clean
-    if(key == NULL)
+    Key* newHead;
+	//Base case: return the other half if  one of them is NULL
+	if(a == NULL) return b;
+	if(b == NULL) return a;
+	
+	//compare the value
+	if(a->getText().compare(b->getText()) < 0)
     {
-        throw std::logic_error("key == NULL");
-    }
-    //*/
-
-    Key* prevKey = key->getPrev();
-    Key* nextKey = key->getNext();
-
-    if(prevKey != NULL)
+		newHead = a;							//assign the newHead to the Node has smaller value
+		newHead->setPrev(merge(a->getPrev(), b));	//recall the functionto find the next Node
+	}
+	else
     {
-        prevKey->setNext(nextKey);
-    }
-
-    if(nextKey != NULL)
-    {
-        nextKey->setPrev(prevKey);
-    }
-
-    /*// probably not necessary but clean
-    key->SetPrev(NULL);
-    key->SetNext(NULL);
-    //*/
+		newHead = b;
+		newHead->setPrev(merge(a, b->getPrev()));
+	}
+	
+	return newHead;
 }
-// post: Disconnects key from list and links the prev and next keys to each other.
 
-void InsertBefore(Key* key, Key* newNextKey)
+Key* sort(Key* tail)
 {
-    /*// probably not necessary but clean
-    if(key == NULL)
+    if(tail->getPrev() == NULL)
     {
-        throw std::logic_error("key == NULL");
+        return tail;
     }
 
-    if(newNextKey == NULL)
+    Key* a;
+    Key* b = tail;
+
+    for(int i = 0; i < getListLength(tail) / 2; i++)
     {
-        throw std::logic_error("newNextKey == NULL");
+        a = b;
+        b = b->getPrev();
     }
-    //*/
 
-    Key* newPrevKey = newNextKey->getPrev();
+    a->setPrev(NULL);
+    a = tail;
 
-    key->setPrev(newPrevKey);
-    key->setNext(newNextKey);
+    a = sort(a);
+    b = sort(b);
 
-    newNextKey->setPrev(key);
-    if(newPrevKey != NULL)
+    return merge(a, b);
+}
+
+void sortValues(Key* key)
+{
+    while(key != NULL)
     {
-        newPrevKey->setNext(key);
+        key->setValuePtr(key->sort(key->getValuePtr()));
+        key = key->getPrev();
     }
 }
-// post: Inserts key in front of other key.
-
-void SortKeys(Key* head)
-{
-    /*// probably not necessary but clean
-    if(currentKey == NULL)
-    {
-        throw std::logic_error("currentKey == null");
-    }
-    //*/
-
-    Key* currentKey = head->getNext();
-    Key* next = NULL;
-    Key* firstHigherOrEqualKey = NULL;
-
-    while(currentKey != NULL)
-    {
-        currentKey->Sort(); // seperate thread
-        next = currentKey->getNext();
-
-        firstHigherOrEqualKey = GetFirstHigherOrEqualKey(currentKey);
-
-        if(firstHigherOrEqualKey != NULL)
-        {
-            DisconnectKey(currentKey);
-            InsertBefore(currentKey, firstHigherOrEqualKey);
-        }
-
-        currentKey = next;
-    }
-}
-// post: Sort all keys. Returns new head.
 
 int main()
 {
-    std::cout << "Program start" << std::endl; // debug
+    //std::cout << "Program start" << std::endl; // debug
 
     FileStructure f;
-    Key head;
+    Key* tail = new Key();
 
-    std::cout << "loading from data/gibberish.bin" << std::endl; // debug
-    
-    //f.loadFile("data/gibberish.bin", head);
+    //std::cout << "loading from data/gibberish.bin" << std::endl; // debug
+    f.loadFile("data/gibberish.bin", *tail);
 
-    //test data:
-    head.AddValue("value");
-    head.AddValue("hello");
-    head.AddValue("tafel");
-    head.AddValue("dikkeneger");
-    head.AddValue("dallo");
-    head.AddValue("hello");
-    head.AddValue("hello");
-    head.AddValue("tafel");
-    head.AddValue("dikkenegex");
-    head.AddValue("fuvcb");
-    head.AddValue("dhfdbe");
-    head.AddValue("hello");
-    head.AddValue("fel");
-    head.AddValue("feop");
-    head.AddValue("fer");
-     head.AddValue("zaag");
-    head.AddValue("zeno");
-    head.AddValue("xtye");
-    head.AddValue("ytr");
-    head.AddValue("ope");
-    head.AddValue("mon");
-    head.AddValue("nom");
+    /*// test data:
+    tail->addValue("value");
+    tail->addValue("hezlo");
+    tail->addValue("tafel");
+    tail->addValue("dikker");
+    tail->addValue("dallo");
+    tail->addValue("hexlo");
+    tail->addValue("heylo");
+    tail->addValue("tafel");
+    tail->addValue("dikegex");
+    tail->addValue("fuvcb");
+    tail->addValue("dhfdbe");
+    tail->addValue("hello");
+    tail->addValue("fel");
+    tail->addValue("feop");
+    tail->addValue("fer");
+    tail->addValue("zaag");
+    tail->addValue("zeno");
+    tail->addValue("xtye");
+    tail->addValue("ytr");
+    tail->addValue("ope");
+    tail->addValue("mon");
+    tail->addValue("nom");
+    //*/
+
+    //*// Remove first empty key
+    Key* oldTail = tail;
+    tail = tail->getPrev();
+    oldTail->setPrev(NULL);
+    delete oldTail;
+    //oldTail = NULL;
+    //*/
 
     // next lines are only to show what kind of data we're working with
     // remove these lines to increase performance!
-    //*//
+    /*//
     std::cout << "\nBefore sort:\n"; // debug
-    head.Print();
+    tail->print();
     std::cout << '\n' << std::endl; // debug
     //*/
     
     // sort all data
     // todo: call your sort method(s) here!
-    std::cout << "Sorting keys and values" << std::endl; // debug
-    SortKeys(&head);
+    //std::cout << "Sorting keys... " << std::endl; // debug
+    tail = sort(tail);
+    //std::cout << "done!" << std::endl; // debug
+
+    //std::cout << "Sorting values in keys... " << std::endl; // debug
+    sortValues(tail);
+    //std::cout << "done!" << std::endl; // debug
 
     // next lines are only to show what kind of data we're working with
     // remove these lines to increase performance!
-    //*//
+    /*//
     std::cout << "\nAfter sort:\n"; // debug
-    head.Print();
+    tail->print();
     std::cout << '\n' << std::endl; // debug
     //*/
 
     // save sorted data into a new file called sorted.bin
-    std::cout << "Saving to sorted.bin" << std::endl; // debug
-    f.saveFile(head, "sorted.bin");
+    //std::cout << "Saving to sorted.bin" << std::endl; // debug
+    f.saveFile(*tail, "sorted.bin");
 
-    std::cout << "Program done" << std::endl; // debug
+    delete tail;
+
+    //std::cout << "Program done" << std::endl; // debug
     
     return 0;
 }

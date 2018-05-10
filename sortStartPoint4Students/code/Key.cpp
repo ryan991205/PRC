@@ -12,8 +12,7 @@ Key::Key()
     //std::cout << "creating new Key" << std::endl; // debug
 
     key = "";
-    head = NULL;
-    nextKey = NULL;
+    valueTail = NULL;
     prevKey = NULL;
 }
 // post: Key is properly initialised, however the key value
@@ -23,16 +22,17 @@ Key::~Key()
 {
     //std::cout << "deleting key" << std::endl; // debug
     
-    while(head != NULL)
+    Value* prev;
+    while(valueTail != NULL)
     {
-        Value* next = head->getNext();
-        delete head;
-        head = next;
+        prev = valueTail->getPrev();
+        delete valueTail;
+        valueTail = prev;
     }
 
-    if(nextKey != NULL)
+    if(prevKey != NULL)
     {
-        delete nextKey;
+        delete prevKey;
     }
 }
 // post: recursively deletes all keys and values
@@ -52,7 +52,7 @@ bool Key::setText(std::string key)
 // post: if key length equals 2 the key value is set and true is returned,
 //       else key is ignored and false is returned
 
-void Key::AddValue(std::string word)
+void Key::addValue(std::string word)
 {
     /*//
     if(word.empty())
@@ -66,81 +66,115 @@ void Key::AddValue(std::string word)
     }
     //*/
 
-    //std::cout << "Key: " << key << " AddValue() with word: " << word <<std::endl; // debug
-
-    //if(key.empty())
-    //{
-    //    key = word.substr(STRING_BEGIN, THIRD_CHAR);
-    //}
+    //std::cout << "Key: " << key << " addValue() with word: " << word <<std::endl; // debug
 
     if(key.compare(word.substr(STRING_BEGIN, THIRD_CHAR)) == 0)
     {
         //std::cout << "word matches" << std::endl; // debug
 
-        Value* next = head;
+        Value* prev = valueTail;
 
-        head = new Value(word);
-        head->setNext(next);
+        valueTail = new Value(word);
+        valueTail->setPrev(prev);
 
-        if(next != NULL)
-        {
-            next->setPrev(head);
-        }
-
-        std::cout << "word matches" << std::endl; // debug
+        //std::cout << "word matches\n" << std::endl; // debug
         return;
     }
 
-    if(nextKey == NULL)
+    if(prevKey == NULL)
     {
-        nextKey = new Key();
-        nextKey->setPrev(this);
-        nextKey->setText(word.substr(STRING_BEGIN, THIRD_CHAR));
+        //std::cout << "test printing: " << std::endl;
+        //print();
+        //std::cout << '\n' << std::endl;
 
-        //std::cout << "creating new key" << std::endl; // debug
+        //std::cout << "creating new key... "; // debug
+
+        prevKey = new Key();
+        prevKey->setText(word.substr(STRING_BEGIN, THIRD_CHAR));
+
+        //std::cout << "done!" << std::endl; // debug
     }
 
     //std::cout << "loop" << std::endl;
-    nextKey->AddValue(word);
+    prevKey->addValue(word);
 }
 // post: a new word is added to the correct key:
 //       - if the word fits in this key, a new value is added to the valuelist
 //       - if the word doesn't fit in this key, addValue is called on the next key
 //       - if no fitting key is found, a new key is made with this value in it
 
-void Key::Sort()
+int Key::getListLength(Value* value)
 {
-    /*// probably not necessary but clean
-    if(currentValue == NULL)
+    //std::cout << "Key::getListLength() called!" << std::endl;
+    
+    int counter = 0;
+
+    while(value != NULL)
     {
-        throw std::logic_error("currentValue == null");
+        counter++;
+        value = value->getPrev();
     }
-    //*/
 
-    Value* currentValue = head;
-    Value* next = NULL;
-    Value* firstLowerOrEqualValue = NULL;
+    return counter;
+}
 
-    while(currentValue != NULL)
+Value* Key::merge(Value* a, Value* b)
+{
+    //std::cout << "Key::merge() called!" << std::endl;
+    
+    Value* newTail;
+	//Base case: return the other half if  one of them is NULL
+	if(a == NULL) return b;
+	if(b == NULL) return a;
+	
+	//compare the value
+	if(a->getText().compare(b->getText()) < 0)
     {
-        firstLowerOrEqualValue = GetFirstHigherOrEqualValue(currentValue);
+		newTail = a;							//assign the newHead to the Node has smaller value
+		newTail->setPrev(merge(a->getPrev(), b));	//recall the functionto find the next Node
+	}
+	else
+    {
+		newTail = b;
+		newTail->setPrev(merge(a, b->getPrev()));
+	}
+	
+	return newTail;
+}
 
-        if(firstLowerOrEqualValue != NULL)
-        {
-            DisconnectValue(currentValue);
-            InsertAfter(currentValue, firstLowerOrEqualValue);
-        }
+Value* Key::sort(Value* tail)
+{
+    //std::cout << "Key::sort() called!" << std::endl;
 
-        currentValue = next;
+    if(tail->getPrev() == NULL)
+    {
+        return tail;
     }
+
+    Value* a;
+    Value* b = tail;
+
+    for(int i = 0; i < getListLength(tail) / 2; i++)
+    {
+        a = b;
+        b = b->getPrev();
+    }
+
+    a->setPrev(NULL);
+    a = tail;
+
+    a = sort(a);
+    b = sort(b);
+
+    return merge(a, b);
 }
 // post: sorts all values that belong to this key
 
-void Key::Print() const
+void Key::print() const
 {
     std::cout << "Key: ";
 
-    if(key == "")
+    if(key.empty())
     {
         std::cout << "!empty string!";
     }
@@ -148,94 +182,18 @@ void Key::Print() const
     {
         std::cout << key;
     }
-
-    if(head != NULL)
+    
+    if(valueTail != NULL)
     {
         std::cout << " -> ";
-        head->Print();
+        valueTail->print();
     }
-
+    
     std::cout << std::endl;
 
-    if(nextKey != NULL)
+    if(prevKey != NULL)
     {
-        nextKey->Print();
+        prevKey->print();
     }
 }
 // post: all keys and values are recursively printed
-
-Value* Key::GetFirstHigherOrEqualValue(Value* value)
-{
-    /*// probably not necessary but clean
-    if(value == NULL)
-    {
-        throw std::logic_error("value == NULL");
-    }
-    //*/
-
-    Value* prevValue = value->getPrev();
-
-    while((prevValue != NULL) && (prevValue->getText() > value->getText()))
-    {
-        prevValue = prevValue->getPrev();
-    }
-
-    return prevValue;
-}
-// post: 
-
-void Key::DisconnectValue(Value* value)
-{
-    /*// probably not necessary but clean
-    if(value == NULL)
-    {
-        throw std::logic_error("value == NULL");
-    }
-    //*/
-
-    Value* prevValue = value->getPrev();
-    Value* nextValue = value->getNext();
-
-    if(prevValue != NULL)
-    {
-        prevValue->setNext(nextValue);
-    }
-
-    if(nextValue != NULL)
-    {
-        nextValue->setPrev(prevValue);
-    }
-
-    /*// probably not necessary but clean
-    value->setPrev(NULL);
-    value->setNext(NULL);
-    //*/
-}
-// post: 
-
-void Key::InsertAfter(Value* value, Value* newPrevValue)
-{
-    /*// probably not necessary but clean
-    if(value == NULL)
-    {
-        throw std::logic_error("value == NULL");
-    }
-
-    if(newPrevValue == NULL)
-    {
-        throw std::logic_error("newPrevValue == NULL");
-    }
-    //*/
-
-    Value* newNextValue = newPrevValue->getNext();
-
-    value->setPrev(newPrevValue);
-    value->setNext(newNextValue);
-
-    newPrevValue->setPrev(value);
-    if(newPrevValue != NULL)
-    {
-        newPrevValue->setNext(value);
-    }
-}
-// post:
